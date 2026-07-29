@@ -46,8 +46,8 @@ def get_synthesis_llm():
     openrouter_key = get_openrouter_key()
     return ChatOpenAI(
         model="meta-llama/llama-3.3-70b-instruct:free",
-        openai_api_key=openrouter_key,
-        openai_api_base="https://openrouter.ai/api/v1"
+        api_key=openrouter_key,
+        base_url="https://openrouter.ai/api/v1"
     )
 
 
