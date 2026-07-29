@@ -45,7 +45,7 @@ def get_synthesis_llm():
     """Dynamically instantiates the OpenRouter reasoning model."""
     openrouter_key = get_openrouter_key()
     return ChatOpenAI(
-        model="meta-llama/llama-3.3-70b-instruct:free",
+        model="openrouter/free",
         api_key=openrouter_key,
         base_url="https://openrouter.ai/api/v1"
     )
