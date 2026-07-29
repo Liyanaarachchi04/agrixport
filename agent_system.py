@@ -45,7 +45,7 @@ def get_synthesis_llm():
     """Dynamically instantiates the OpenRouter reasoning model."""
     openrouter_key = get_openrouter_key()
     return ChatOpenAI(
-        model="openrouter/free",
+        model="google/gemma-2-9b-it:free",
         api_key=openrouter_key,
         base_url="https://openrouter.ai/api/v1"
     )
@@ -100,27 +100,33 @@ def rag_research_agent(state: AgentState):
     return {"retrieved_docs": context}
 
 
-# AGENT 3: Synthesis & Self-Critique / Reflection Pattern
+# AGENT 3: Optimized Synthesis & Self-Critique / Reflection Pattern
 def synthesis_reflection_agent(state: AgentState):
     query = state["query"]
     docs = state.get("retrieved_docs", "No regulatory context fetched.")
     
-    # Initialize model dynamically
     synthesis_llm = get_synthesis_llm()
 
-    # Step 1: Draft Response
-    draft_prompt = f"Answer query: {query}\n\nUsing Context:\n{docs}"
-    draft = synthesis_llm.invoke(draft_prompt).content
-
-    # Step 2: Self-Critique / Reflection Pattern
-    critique_prompt = f"Critique and verify this response against facts. Ensure no hallucination:\nDraft: {draft}"
-    critique = synthesis_llm.invoke(critique_prompt).content
-
-    # Step 3: Final Refined Synthesis
-    final_prompt = f"Refine the draft based on critique.\nDraft: {draft}\nCritique: {critique}"
-    final_ans = synthesis_llm.invoke(final_prompt).content
-
-    return {"draft_response": draft, "final_response": final_ans}
+    # Single-pass prompt combining drafting, critique, and refinement
+    combined_prompt = f"""
+    You are an expert Sri Lanka AgriExport AI Advisor.
+    User Query: {query}
+    
+    Retrieved Context:
+    {docs}
+    
+    Task:
+    1. Draft a clear answer based ONLY on the context above.
+    2. Critique your draft internally to eliminate hallucinations or unverified claims.
+    3. Output ONLY the verified, final response for the exporter.
+    """
+    
+    res = synthesis_llm.invoke(combined_prompt)
+    
+    return {
+        "draft_response": res.content, 
+        "final_response": res.content
+    }
 
 
 # ==========================================
