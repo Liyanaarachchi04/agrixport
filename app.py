@@ -1,15 +1,16 @@
 import streamlit as st
 import os
-from agent_system import agent_app
-
-st.set_page_config(page_title="SL AgriExport AI Agent", page_icon="🍃", layout="wide")
-st.title("🍃 Sri Lanka AgriExport Compliance Agent")
 
 # Load API Keys securely from Streamlit Secrets or Environment
 if "GROQ_API_KEY" in st.secrets:
     os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
 if "OPENROUTER_API_KEY" in st.secrets:
     os.environ["OPENROUTER_API_KEY"] = st.secrets["OPENROUTER_API_KEY"]
+    
+from agent_system import agent_app
+
+st.set_page_config(page_title="SL AgriExport AI Agent", page_icon="🍃", layout="wide")
+st.title("🍃 Sri Lanka AgriExport Compliance Agent")
 
 # Session Chat State
 if "messages" not in st.session_state:
