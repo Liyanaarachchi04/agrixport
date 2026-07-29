@@ -42,12 +42,12 @@ def get_router_llm():
 
 
 def get_synthesis_llm():
-    """Dynamically instantiates the OpenRouter reasoning model."""
-    openrouter_key = get_openrouter_key()
-    return ChatOpenAI(
-        model="google/gemma-2-9b-it:free",
-        api_key=openrouter_key,
-        base_url="https://openrouter.ai/api/v1"
+    """Dynamically instantiates the Groq 70B reasoning model for synthesis."""
+    groq_key = get_groq_key()
+    return ChatGroq(
+        model="llama-3.3-70b-versatile",
+        temperature=0.2,
+        groq_api_key=groq_key
     )
 
 
